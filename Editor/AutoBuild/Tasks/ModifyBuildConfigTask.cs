@@ -30,10 +30,19 @@ namespace AutoBuildSystem
                     BuildConfig buildConfig = JsonUtility.FromJson<BuildConfig>(originalText);
                     
                     // 使用SharedParameters中的参数
+                    base.LogParameter(config, BuildParameterKeys.ChannelCode);
                     buildConfig.ChannelCode = config.GetParameter<ChannelCodeType>(BuildParameterKeys.ChannelCode);
+                    
+                    base.LogParameter(config, BuildParameterKeys.HttpServerType);
                     buildConfig.HttpServerType = config.GetParameter<int>(BuildParameterKeys.HttpServerType);
+                    
+                    base.LogParameter(config, BuildParameterKeys.IsOnlyChapter0);
                     buildConfig.OnlyChapter0 = config.GetParameter<bool>(BuildParameterKeys.IsOnlyChapter0);
                     
+                    base.LogParameter(config, BuildParameterKeys.ShowTestLogView);
+                    buildConfig.ShowTestLogView = config.GetParameter<bool>(BuildParameterKeys.ShowTestLogView);
+                    
+                    base.LogParameter(config, BuildParameterKeys.BundleServerType);
                     int bundleServerType = config.GetParameter<int>(BuildParameterKeys.BundleServerType);
                     if (bundleServerType == 0)
                     {
@@ -46,14 +55,8 @@ namespace AutoBuildSystem
 
                     string modifiedText = JsonUtility.ToJson(buildConfig, true);
 
-                    //config.Logger.Log($"配置更新 ChannelCode: {buildConfig.ChannelCode}");
-                    //config.Logger.Log($"配置更新 HttpServerType: {buildConfig.HttpServerType}");
-                    //config.Logger.Log($"配置更新 BundleServerUrl: {buildConfig.BundleServerUrl}");
-                    //config.Logger.Log($"配置更新 ShowTestLogView: {buildConfig.ShowTestLogView}");
-
                     File.WriteAllText(fullPath, modifiedText);
                     AssetDatabase.Refresh();
-                    //config.Logger.Log("配置更新完成");
 
                     Status = AutoBuildTaskStatus.Completed;
                     return true;

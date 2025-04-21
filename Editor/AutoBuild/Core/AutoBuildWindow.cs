@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AutoBuildSystem
 {
@@ -13,13 +14,15 @@ namespace AutoBuildSystem
     {
         #region 参数
         private const string _cachedPathKey = "AutoBuildWindowCachedPath";
-        public string _outputPath;//根路径
+        private bool _isBuilding = false; // 添加一个标志位表示是否正在构建
+        private string _outputPath;//根路径
 
         private ChannelCodeType _channelCode = 0;//登录方式选择
         private AutoBuildPlatform _platform = 0;//登录方式选择
         private int _httpServerType = 0;//服务器环境
         private int _bundleServerType = 0;//资源服务器地址
-        public bool _isOnlyChapter0;// 是不是只有序章的内容
+        private bool _isOnlyChapter0;// 是不是只有序章的内容
+        private bool _showTestLogView;//是不是打开测试的log界面
 
         private EDownloadMode _videoDownloadMode;
         private YooAsset.EPlayMode _yooAssetPlayMode;
@@ -47,7 +50,7 @@ namespace AutoBuildSystem
         }
         void OnGUI()
         {
-            EditorGUILayout.BeginVertical(GUILayout.Width(300));
+            EditorGUILayout.BeginVertical();
             EditorGUILayout.Space(30);
 
             GUILayout.BeginHorizontal();// 水平布局组，将输入框和按钮放在同一行
@@ -85,6 +88,8 @@ namespace AutoBuildSystem
             EditorGUILayout.Space(20);
             _isOnlyChapter0 = EditorGUILayout.Toggle("只有序章", _isOnlyChapter0);
             EditorGUILayout.Space(20);
+            _showTestLogView = EditorGUILayout.Toggle("打开Log", _showTestLogView);
+            EditorGUILayout.Space(20);
             // 登录方式选择
             _platform = (AutoBuildPlatform)EditorGUILayout.EnumPopup("平台", _platform);
             EditorGUILayout.Space(20);
@@ -100,12 +105,12 @@ namespace AutoBuildSystem
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("修改配置", GUILayout.Height(30)))
             {
-                ExecuteBuild(false);
+                StartBuild(false);
             }
             // 打包按钮
             if (GUILayout.Button("执行打包", GUILayout.Height(30)))
             {
-                ExecuteBuild(true);
+                StartBuild(true);
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(20);
@@ -115,22 +120,61 @@ namespace AutoBuildSystem
                 _platform = AutoBuildPlatform.Ios;
                 _channelCode = ChannelCodeType.AppleStore;
                 _removeStartScenes = true;
-                _httpServerType = 1;
+                _httpServerType = 0;
                 _yooAssetPlayMode = YooAsset.EPlayMode.OfflinePlayMode;
                 _videoDownloadMode = EDownloadMode.OfflinePlayMode;
                 _isOnlyChapter0 = true;
-                ExecuteBuild(true);
+                _showTestLogView = true;
+                StartBuild(true);
             }
             if (GUILayout.Button("Win测试", GUILayout.Height(30)))
             {
-                ExecuteBuild(true);
+                _platform = AutoBuildPlatform.Windows;
+                _channelCode = ChannelCodeType.LocalTest;
+                _removeStartScenes = true;
+                _httpServerType = 0;
+                _yooAssetPlayMode = YooAsset.EPlayMode.OfflinePlayMode;
+                _videoDownloadMode = EDownloadMode.OfflinePlayMode;
+                _isOnlyChapter0 = true;
+                _showTestLogView = true;
+                StartBuild(true);
             }
             if (GUILayout.Button("Android测试", GUILayout.Height(30)))
             {
-                ExecuteBuild(true);
+                _platform = AutoBuildPlatform.Android_Apk;
+                _channelCode = ChannelCodeType.LocalTest;
+                _removeStartScenes = true;
+                _httpServerType = 0;
+                _yooAssetPlayMode = YooAsset.EPlayMode.OfflinePlayMode;
+                _videoDownloadMode = EDownloadMode.OfflinePlayMode;
+                _isOnlyChapter0 = true;
+                _showTestLogView = true;
+                StartBuild(true);
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
+        }
+        
+        private void StartBuild(bool isBuild)
+        {
+            if (_isBuilding){ 
+                return; 
+            }
+            _isBuilding = true;
+            //确保构建操作在下一帧执行,避免 OnGUI 执行时间过长导致的布局错误
+            EditorApplication.delayCall += () =>
+            {
+                try
+                {
+                    ExecuteBuild(isBuild);
+                    _isBuilding = false;
+                }
+                finally
+                {
+                    _isBuilding = false;
+                    Repaint(); // 刷新窗口
+                }
+            };
         }
         private void ExecuteBuild(bool isBuild)
         {
@@ -146,8 +190,10 @@ namespace AutoBuildSystem
             autoBuildConfig.SetParameter(BuildParameterKeys.HttpServerType, _httpServerType);
             autoBuildConfig.SetParameter(BuildParameterKeys.BundleServerType,_bundleServerType);
             autoBuildConfig.SetParameter(BuildParameterKeys.IsOnlyChapter0, _isOnlyChapter0);
+            autoBuildConfig.SetParameter(BuildParameterKeys.ShowTestLogView, _showTestLogView);
 
             BuildManager buildManager = new BuildManager(autoBuildConfig);
+
             bool successPreBuild = buildManager.ExecuteBuildTask(autoBuildConfig, BuildTaskType.PreBuild);
             if(!successPreBuild)
                 return;

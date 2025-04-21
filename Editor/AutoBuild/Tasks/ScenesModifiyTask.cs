@@ -37,8 +37,13 @@ namespace AutoBuildSystem
                     Status = AutoBuildTaskStatus.Failed;
                     return false;
                 }
+                
+                base.LogParameter(config, BuildParameterKeys.VideoDownloadMode);
                 EDownloadMode videoDownloadMode = config.GetParameter<EDownloadMode>(BuildParameterKeys.VideoDownloadMode);
+                
+                base.LogParameter(config, BuildParameterKeys.YooAssetPlayMode);
                 YooAsset.EPlayMode yooAssetPlayMode = config.GetParameter<YooAsset.EPlayMode>(BuildParameterKeys.YooAssetPlayMode);
+                
                 mainEntry.YooAssetMode = yooAssetPlayMode;
                 mainEntry.DownloadVideoMode = videoDownloadMode;
                 //config.Logger.Log($"场景配置已修改 - YooAssetMode: {yooAssetPlayMode}, DownloadVideoMode: {videoDownloadMode}");

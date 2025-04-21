@@ -21,11 +21,12 @@ namespace AutoBuildSystem
             try
             {
                 Status = AutoBuildTaskStatus.Running;
+                base.LogParameter(autoBuildConfig, BuildParameterKeys.NeedBuildBundle);
                 bool needBuildBundle = autoBuildConfig.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
                 if (needBuildBundle)
                 {
 #if UseHybridCLR
-                    autoBuildConfig.Logger.Log($"开始生成 HybridCLR 热更新代码，强制生成");
+                    Debug.Log($"开始生成 HybridCLR 热更新代码，强制生成");
                     HybridCLR.Editor.BuildAssetsCommand.GenerateAll();
 #endif
                 }

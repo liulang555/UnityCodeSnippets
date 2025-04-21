@@ -24,7 +24,7 @@ namespace AutoBuildSystem
         {
             return new ScriptingDefineSettings
             {
-                IncludeDefines = new HashSet<string> { "DISABLESTEAMWORKS" },
+                IncludeDefines = new HashSet<string> { "STEAMWORKS_NET" },//防止切换steam平台报错   本地测试直接用一套宏定义
                 ExcludeDefines = new HashSet<string> { }
             };
         }

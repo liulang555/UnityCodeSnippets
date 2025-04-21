@@ -79,6 +79,7 @@ namespace AutoBuildSystem
         BuildPlatform,
         VideoDownloadMode,
         YooAssetPlayMode,
+        ShowTestLogView,
         //启动配置参数
         ChannelCode,
         HttpServerType,

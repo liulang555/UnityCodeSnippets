@@ -18,7 +18,11 @@ namespace AutoBuildSystem
             try
             {
                 Status = AutoBuildTaskStatus.Running;
+                
+                base.LogParameter(config, BuildParameterKeys.SteamAppID);
                 int steamAppID = config.GetParameter<int>(BuildParameterKeys.SteamAppID);
+                
+                base.LogParameter(config, BuildParameterKeys.WindwosFloderPath);
                 string windwosFloderPath = config.GetParameter<string>(BuildParameterKeys.WindwosFloderPath);
 
                 string strSteamAppIdPath = Path.Combine(windwosFloderPath, "steam_appid.txt");

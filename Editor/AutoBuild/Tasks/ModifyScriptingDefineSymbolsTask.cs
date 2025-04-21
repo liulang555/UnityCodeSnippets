@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace AutoBuildSystem
 {
@@ -21,29 +22,12 @@ namespace AutoBuildSystem
             try
             {
                 Status = AutoBuildTaskStatus.Running;
-                
-                // 添加平台基础的宏定义
-                var definesList = platform.GetScriptingDefines();
-                
-                var channelDefines = channel.GetScriptingDefines();
-                // 处理渠道特定的宏定义
-                // 移除需要排除的宏定义
-                foreach (var excludeDefine in channelDefines.ExcludeDefines)
-                {
-                    if (definesList.Contains(excludeDefine))
-                        definesList.Remove(excludeDefine);
-                }
 
-                // 添加需要包含的宏定义
-                foreach (var includeDefine in channelDefines.IncludeDefines)
-                {
-                    if(!definesList.Contains(includeDefine))
-                        definesList.Add(includeDefine);
-                }
-
-                string newDefines = string.Join(";", definesList);
+                // 计算最终的宏定义列表
+                string newDefines = CalculateScriptingDefines(platform, channel);
+                // 设置宏定义
                 PlayerSettings.SetScriptingDefineSymbols(platform.GetNamedBuildTarget(), newDefines);
-                config.Logger.Log($"宏定义修改: {string.Join(", ", definesList)}");
+                LogString(config,newDefines);
 
                 Status = AutoBuildTaskStatus.Completed;
                 return true;
@@ -54,6 +38,31 @@ namespace AutoBuildSystem
                 Status = AutoBuildTaskStatus.Failed;
                 return false;
             }
+        }
+
+        private string CalculateScriptingDefines(IAutoBuildPlatform platform, IChannel channel)
+        {
+            // 获取平台基础的宏定义
+            var definesList = platform.GetScriptingDefines();
+            var channelDefines = channel.GetScriptingDefines();
+
+            // 移除需要排除的宏定义
+            foreach (var excludeDefine in channelDefines.ExcludeDefines)
+            {
+                if (definesList.Contains(excludeDefine))
+                    definesList.Remove(excludeDefine);
+            }
+
+            // 添加需要包含的宏定义
+            foreach (var includeDefine in channelDefines.IncludeDefines)
+            {
+                if (!definesList.Contains(includeDefine))
+                    definesList.Add(includeDefine);
+            }
+
+            string newDefines = string.Join(";", definesList);
+
+            return newDefines;
         }
     }
 }

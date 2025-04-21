@@ -15,5 +15,14 @@ namespace AutoBuildSystem
         {
             Status = AutoBuildTaskStatus.Cancelled;
         }
+        // 打印任务参数
+        protected void LogParameter(AutoBuildConfig autoBuildConfig, BuildParameterKeys paramkey)
+        {
+            autoBuildConfig.Logger.Log($"----- [{TaskId}] 参数: {paramkey} , 值：{autoBuildConfig.GetParameter<object>(paramkey)}");
+        }
+        protected void LogString(AutoBuildConfig autoBuildConfig, string str)
+        {
+            autoBuildConfig.Logger.Log($"----- [{TaskId}] , {str}");
+        }
     }
 }

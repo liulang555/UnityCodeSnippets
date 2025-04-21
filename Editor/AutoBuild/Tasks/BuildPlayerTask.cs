@@ -28,7 +28,7 @@ namespace AutoBuildSystem
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                // 获取构建路径
+                base.LogParameter(autoBuildConfig, BuildParameterKeys.BuildOutPut);// 获取构建路径前先打印参数
                 string outputPath = autoBuildConfig.GetParameter<string>(BuildParameterKeys.BuildOutPut);
                 if (string.IsNullOrEmpty(outputPath))
                 {
@@ -38,18 +38,20 @@ namespace AutoBuildSystem
                 }
                 // 确保输出目录存在
                 YooAsset.Editor.EditorTools.CreateFileDirectory(outputPath);
+                
+                base.LogParameter(autoBuildConfig, BuildParameterKeys.RemoveStartScenes);// 获取是否移除开始场景参数前先打印参数
                 bool removeStartScenes = autoBuildConfig.GetParameter<bool>(BuildParameterKeys.RemoveStartScenes);
+                
                 // 准备构建选项
                 BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
                 {
-                    scenes = this.GetBuildScenes(removeStartScenes,autoBuildConfig.Logger),
+                    scenes = this.GetBuildScenes(autoBuildConfig,removeStartScenes),
                     locationPathName = outputPath,
                     target = platform.BuildTarget,
                     options = BuildOptions.None,
                 };
-                
                 // 执行构建
-                autoBuildConfig.Logger.Log($"开始构建 {platform.PlatformName} 应用，输出路径：{outputPath}，时间：{DateTime.Now}");
+                LogString(autoBuildConfig, $"开始构建 {platform.PlatformName} 应用，时间：{DateTime.Now}");
                 BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
                 
                 // 停止计时器
@@ -74,7 +76,7 @@ namespace AutoBuildSystem
                 // 处理构建结果
                 if (report.summary.result == BuildResult.Succeeded)
                 {
-                    autoBuildConfig.Logger.Log($"{platform.PlatformName} 构建成功，耗时：{formattedTime}，完成时间：{DateTime.Now}");
+                    LogString(autoBuildConfig, $"{platform.PlatformName} 构建成功，耗时：{formattedTime}，完成时间：{DateTime.Now}");
                     
                     // 记录构建结果信息
                     autoBuildConfig.SetParameter(BuildParameterKeys.BuildSuccess, true);
@@ -105,7 +107,7 @@ namespace AutoBuildSystem
         
         // 删除单独的 FormatTimeSpan 方法，已合并到 Execute 方法中
         
-        public string[] GetBuildScenes(bool _removeStartScenes, BuildLogger Logger)
+        public string[] GetBuildScenes(AutoBuildConfig autoBuildConfig,bool _removeStartScenes)
         {
             // 获取场景列表
             List<string> levels = new List<string>();
@@ -125,7 +127,7 @@ namespace AutoBuildSystem
                         continue;
                     }
                     levels.Add(scene.path);
-                    Logger.Log("AutoBuild 添加打包场景: " + scene.path);
+                    LogString(autoBuildConfig, "添加场景: " + scene.path);
                 }
                 else
                 {

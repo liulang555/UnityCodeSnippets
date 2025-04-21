@@ -21,11 +21,12 @@ namespace AutoBuildSystem
             {
                 Status = AutoBuildTaskStatus.Running;
 
+                base.LogParameter(autoBuildConfig, BuildParameterKeys.OpenDirectory);
                 string OpenBuildDirectory = autoBuildConfig.GetParameter<string>(BuildParameterKeys.OpenDirectory);
                 if (!string.IsNullOrEmpty(OpenBuildDirectory))
                 {
                     EditorUtility.RevealInFinder(OpenBuildDirectory);
-                    autoBuildConfig.Logger.Log($"已打开构建输出目录: {OpenBuildDirectory}");
+                    LogString(autoBuildConfig , "已打开输出目录");
                 }
                 else
                 {

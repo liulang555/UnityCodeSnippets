@@ -128,14 +128,14 @@ namespace AutoBuildSystem
                                          .OrderBy(t => t.Priority)
                                          .ToList();
 
-                autoBuildConfig.Logger.Log($"-------------------->{buildTaskType} 阶段<-----------------");
+                autoBuildConfig.Logger.Log($"--------------------------------------------->{buildTaskType} 阶段<---------------------------------------------");
                 int totalSeconds = 0; // 添加总计时
                 foreach (var task in selectBuildTasks)
                 {
                     try
                     {
                         // 使用分隔线使日志更清晰
-                        autoBuildConfig.Logger.Log($"执行  -- {task.TaskName} --");
+                        autoBuildConfig.Logger.Log($"----- {task.TaskName} -----");
                         if (task.Status == AutoBuildTaskStatus.Running)
                         {
                             autoBuildConfig.Logger.LogWarning($"任务 {task.TaskName} 已在运行中");
@@ -165,7 +165,7 @@ namespace AutoBuildSystem
                     }
                 }
                 // 记录总耗时
-                autoBuildConfig.Logger.Log($"--------------------------------------------->{buildTaskType} 阶段总耗时: {totalSeconds} 秒");
+                autoBuildConfig.Logger.Log($"--------------------------------------------->{buildTaskType} 阶段总耗时: {totalSeconds} 秒<---------------------------------------------");
                 return true;
             }
             catch (Exception ex)

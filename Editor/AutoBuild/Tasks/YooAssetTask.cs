@@ -23,6 +23,7 @@ namespace AutoBuildSystem
             {
                 Status = AutoBuildTaskStatus.Running;
 
+                base.LogParameter(config, BuildParameterKeys.NeedBuildBundle);
                 bool needBuildBundle = config.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
                 if (!needBuildBundle)
                 {
