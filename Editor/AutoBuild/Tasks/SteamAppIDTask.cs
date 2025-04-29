@@ -11,43 +11,30 @@ namespace AutoBuildSystem
             TaskName = "创建 Steam AppID 文件";
             Priority = (int)BuildTaskPriority.SteamAppIDTask;
             TaskType = BuildTaskType.PostBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
-        public override bool Execute(AutoBuildConfig config, IAutoBuildPlatform platform, IChannel channel)
+        
+        public override bool ExecuteInternal(Context context, IAutoBuildPlatform platform, IChannel channel)
         {
-            try
-            {
-                Status = AutoBuildTaskStatus.Running;
-                
-                base.LogParameter(config, BuildParameterKeys.SteamAppID);
-                int steamAppID = config.GetParameter<int>(BuildParameterKeys.SteamAppID);
-                
-                base.LogParameter(config, BuildParameterKeys.WindwosFloderPath);
-                string windwosFloderPath = config.GetParameter<string>(BuildParameterKeys.WindwosFloderPath);
+            base.LogParameter(context, BuildParameterKeys.SteamAppID);
+            int steamAppID = context.GetParameter<int>(BuildParameterKeys.SteamAppID);
 
-                string strSteamAppIdPath = Path.Combine(windwosFloderPath, "steam_appid.txt");
-                if (!File.Exists(strSteamAppIdPath))
-                {
-                    using (StreamWriter appIdFile = File.CreateText(strSteamAppIdPath))
-                    {
-                        appIdFile.Write(steamAppID);
-                    }
-                    config.Logger.Log($"AutoBuild SteamAppIDTask 创建 steam_appid.txt: {steamAppID}");
-                }
-                else
-                {
-                    config.Logger.Log("AutoBuild SteamAppIDTask steam_appid.txt 已存在");
-                }
+            base.LogParameter(context, BuildParameterKeys.WindwosFloderPath);
+            string windwosFloderPath = context.GetParameter<string>(BuildParameterKeys.WindwosFloderPath);
 
-                Status = AutoBuildTaskStatus.Completed;
-                return true;
-            }
-            catch (System.Exception ex)
+            string strSteamAppIdPath = Path.Combine(windwosFloderPath, "steam_appid.txt");
+            if (!File.Exists(strSteamAppIdPath))
             {
-                Debug.LogError($"AutoBuild SteamAppIDTask 错误: {ex.Message}");
-                Status = AutoBuildTaskStatus.Failed;
-                return false;
+                using (StreamWriter appIdFile = File.CreateText(strSteamAppIdPath))
+                {
+                    appIdFile.Write(steamAppID);
+                }
+                context.Logger.Log($"AutoBuild SteamAppIDTask 创建 steam_appid.txt: {steamAppID}");
             }
+            else
+            {
+                context.Logger.Log("AutoBuild SteamAppIDTask steam_appid.txt 已存在");
+            }
+            return true;
         }
     }
 }

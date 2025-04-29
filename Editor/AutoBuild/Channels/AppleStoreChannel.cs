@@ -9,7 +9,7 @@ namespace AutoBuildSystem
             ChannelId = ChannelCodeType.AppleStore;
             ChannelName = "Apple Store";
             PackgeName = "com.InnovationDream.TimeRebuild";
-            ProductName = "ïrø’÷ÿòã";
+            ProductName = "ÊôÇÁ©∫ÈáçÊßã";
         }
 
         public override List<IBuildTask> GetChannelTasks()
@@ -29,7 +29,7 @@ namespace AutoBuildSystem
             };
         }
 
-        public override void InitializeChannelParameters(AutoBuildConfig autoBuildConfig)
+        public override void InitializeChannelParameters(Context context)
         {
 
         }

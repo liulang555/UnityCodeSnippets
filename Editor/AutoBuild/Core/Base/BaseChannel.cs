@@ -10,6 +10,6 @@ namespace AutoBuildSystem
         public string PackgeName { get; protected set; }
         public abstract List<IBuildTask> GetChannelTasks();
         public abstract ScriptingDefineSettings GetScriptingDefines();
-        public abstract void InitializeChannelParameters(AutoBuildConfig autoBuildConfig);
+        public abstract void InitializeChannelParameters(Context context);
     }
 }

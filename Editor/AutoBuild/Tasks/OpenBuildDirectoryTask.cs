@@ -12,34 +12,28 @@ namespace AutoBuildSystem
             TaskName = "打包结束，打开输出目录";
             Priority = (int)BuildTaskPriority.OpenBuildDirectoryTask;
             TaskType = BuildTaskType.PostBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
 
-        public override bool Execute(AutoBuildConfig autoBuildConfig, IAutoBuildPlatform platform, IChannel channel)
+        public override bool ExecuteInternal(Context context, IAutoBuildPlatform platform, IChannel channel)
         {
             try
             {
-                Status = AutoBuildTaskStatus.Running;
-
-                base.LogParameter(autoBuildConfig, BuildParameterKeys.OpenDirectory);
-                string OpenBuildDirectory = autoBuildConfig.GetParameter<string>(BuildParameterKeys.OpenDirectory);
+                base.LogParameter(context, BuildParameterKeys.OpenDirectory);
+                string OpenBuildDirectory = context.GetParameter<string>(BuildParameterKeys.OpenDirectory);
                 if (!string.IsNullOrEmpty(OpenBuildDirectory))
                 {
                     EditorUtility.RevealInFinder(OpenBuildDirectory);
-                    LogString(autoBuildConfig , "已打开输出目录");
+                    LogString(context , "已打开输出目录");
                 }
                 else
                 {
-                    autoBuildConfig.Logger.LogWarning("无法打开构建目录: 未找到输出路径参数");
+                    context.Logger.LogWarning("无法打开构建目录: 未找到输出路径参数");
                 }
-
-                Status = AutoBuildTaskStatus.Completed;
                 return true;
             }
             catch (System.Exception ex)
             {
-                autoBuildConfig.Logger.LogError($"打开构建目录任务失败: {ex.Message}");
-                Status = AutoBuildTaskStatus.Failed;
+                context.Logger.LogError($"打开构建目录任务失败: {ex.Message}");
                 return false;
             }
         }

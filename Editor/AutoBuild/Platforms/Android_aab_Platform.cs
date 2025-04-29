@@ -27,6 +27,7 @@ namespace AutoBuildSystem
                 new ModifyBuildConfigTask(),
                 new BuildPlayerTask(),
                 new OpenBuildDirectoryTask(),
+                new VersionAddTask(),
             };
         }
 
@@ -35,7 +36,7 @@ namespace AutoBuildSystem
             return new HashSet<string> { "DISABLESTEAMWORKS", "DOTWEEN", "UseHybridCLR" };
         }
 
-        public override void UnitySettings(AutoBuildConfig autoBuildConfig)
+        public override void UnitySettings(Context context)
         {
             EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
             PlayerSettings.Android.ARCoreEnabled = false;
@@ -43,13 +44,13 @@ namespace AutoBuildSystem
             EditorUserBuildSettings.buildAppBundle = true;
             PlayerSettings.Android.splitApplicationBinary = true;
         }
-        public override void InitializePlatformParameters(AutoBuildConfig autoBuildConfig, IChannel channel)
+        public override void InitializePlatformParameters(Context context, IChannel channel)
         {
-            string outputPath = autoBuildConfig.GetParameter<string>(BuildParameterKeys.OutputPath);
+            string outputPath = context.GetParameter<string>(BuildParameterKeys.OutputPath);
             string exprotFloderPath = Path.Combine(outputPath, AutoBuildPlatform.ToString() + "_" + channel.ChannelId.ToString());
-            autoBuildConfig.SetParameter(BuildParameterKeys.ExprotFloderPath, exprotFloderPath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.BuildOutPut, exprotFloderPath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.OpenDirectory, exprotFloderPath);
+            context.SetParameter(BuildParameterKeys.ExprotFloderPath, exprotFloderPath);
+            context.SetParameter(BuildParameterKeys.BuildOutPut, exprotFloderPath);
+            context.SetParameter(BuildParameterKeys.OpenDirectory, exprotFloderPath);
         }
     }
 }

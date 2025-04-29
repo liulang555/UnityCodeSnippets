@@ -11,8 +11,8 @@ namespace AutoBuildSystem
         public AutoBuildPlatform AutoBuildPlatform { get;protected set; }
         public abstract List<IBuildTask> GetPlatformTasks();
         public abstract HashSet<string> GetScriptingDefines();
-        public abstract void UnitySettings(AutoBuildConfig autoBuildConfig);
-        public abstract void InitializePlatformParameters(AutoBuildConfig autoBuildConfig, IChannel channel);
+        public abstract void UnitySettings(Context context);
+        public abstract void InitializePlatformParameters(Context context, IChannel channel);
 
         #region BuildTarget
         public BuildTarget BuildTarget { get; protected set; }

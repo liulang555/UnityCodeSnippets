@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9231e7975fa244094fcf2d2d90844c, type: 3}
+  m_Name: "IOS_\u82F9\u679C"
+  m_EditorClassIdentifier: 
+  _outputPath: C:/Users/user/Desktop/HttpServer
+  _packgeName: com.InnovationDream.TimeRebuild
+  _productName: "\u6642\u7A7A\u91CD\u69CB"
+  _productVersion: 1.0.7
+  _versionCode: 7
+  _needBundle: 0
+  _removeStartScenes: 0
+  _platform: 4
+  _channelCode: 5
+  _httpServerType: 1
+  _bundleServerType: 1
+  _isOnlyChapter0: 1
+  _showTestLogView: 0
+  _videoDownloadMode: 3
+  _yooAssetPlayMode: 2

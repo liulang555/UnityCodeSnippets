@@ -18,13 +18,13 @@ namespace AutoBuildSystem
         /// 当前平台的设置
         /// </summary>
         /// <param name="config"></param>
-        void UnitySettings(AutoBuildConfig autoBuildConfig);
+        void UnitySettings(Context context);
         HashSet<string> GetScriptingDefines();
         /// <summary>
         /// 设置平台特定的参数到共享参数字典
         /// </summary>
-        /// <param name="autoBuildConfig">构建配置</param>
-        void InitializePlatformParameters(AutoBuildConfig autoBuildConfig, IChannel channel);
+        /// <param name="context">构建配置</param>
+        void InitializePlatformParameters(Context context, IChannel channel);
 
         #region BuildTarget
         /// <summary>

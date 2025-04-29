@@ -22,11 +22,11 @@ namespace AutoBuildSystem
         /// </summary>
         string ProductName { get; }
         List<IBuildTask> GetChannelTasks();
-        
+
         /// <summary>
         /// 设置渠道特定的参数到共享参数字典
         /// </summary>
-        /// <param name="autoBuildConfig">构建配置</param>
-        void InitializeChannelParameters(AutoBuildConfig autoBuildConfig);
+        /// <param name="context">构建配置</param>
+        void InitializeChannelParameters(Context context);
     }
 }

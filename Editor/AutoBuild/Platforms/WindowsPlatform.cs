@@ -34,23 +34,23 @@ namespace AutoBuildSystem
             return new HashSet<string> { "DOTWEEN", "UseHybridCLR" };
         }
 
-        public override void UnitySettings(AutoBuildConfig autoBuildConfig)
+        public override void UnitySettings(Context context)
         {
            
         }
-        public override void InitializePlatformParameters(AutoBuildConfig autoBuildConfig, IChannel channel)
+        public override void InitializePlatformParameters(Context context, IChannel channel)
         {
-            string timestr = autoBuildConfig.GetParameter<string>(BuildParameterKeys.TimeStr);
-            string outputPath = autoBuildConfig.GetParameter<string>(BuildParameterKeys.OutputPath);
+            string timestr = context.GetParameter<string>(BuildParameterKeys.TimeStr);
+            string outputPath = context.GetParameter<string>(BuildParameterKeys.OutputPath);
             string exprotFloderPath = Path.Combine(outputPath, AutoBuildPlatform.ToString() + "_" + channel.ChannelId.ToString());
             string windwosFloderPath = Path.Combine(exprotFloderPath, $"{channel.ProductName}_{timestr}");
             string exePath = Path.Combine(windwosFloderPath, $"{channel.ProductName}.exe");
 
-            autoBuildConfig.SetParameter(BuildParameterKeys.ExprotFloderPath, exprotFloderPath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.WindwosFloderPath, windwosFloderPath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.WindwosExePath, exePath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.BuildOutPut, exePath);
-            autoBuildConfig.SetParameter(BuildParameterKeys.OpenDirectory, Path.GetDirectoryName(exePath));
+            context.SetParameter(BuildParameterKeys.ExprotFloderPath, exprotFloderPath);
+            context.SetParameter(BuildParameterKeys.WindwosFloderPath, windwosFloderPath);
+            context.SetParameter(BuildParameterKeys.WindwosExePath, exePath);
+            context.SetParameter(BuildParameterKeys.BuildOutPut, exePath);
+            context.SetParameter(BuildParameterKeys.OpenDirectory, Path.GetDirectoryName(exePath));
         }
     }
 } 

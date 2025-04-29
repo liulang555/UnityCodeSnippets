@@ -13,16 +13,14 @@ namespace AutoBuildSystem
             TaskName = "生成热更新代码 HybridCLR GenerateAll";
             Priority = (int)BuildTaskPriority.AutoHybridCLRTask;
             TaskType = BuildTaskType.PreBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
 
-        public override bool Execute(AutoBuildConfig autoBuildConfig, IAutoBuildPlatform platform, IChannel channel)
+        public override bool ExecuteInternal(Context context, IAutoBuildPlatform platform, IChannel channel)
         {
             try
             {
-                Status = AutoBuildTaskStatus.Running;
-                base.LogParameter(autoBuildConfig, BuildParameterKeys.NeedBuildBundle);
-                bool needBuildBundle = autoBuildConfig.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
+                base.LogParameter(context, BuildParameterKeys.NeedBuildBundle);
+                bool needBuildBundle = context.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
                 if (needBuildBundle)
                 {
 #if UseHybridCLR
@@ -30,14 +28,11 @@ namespace AutoBuildSystem
                     HybridCLR.Editor.BuildAssetsCommand.GenerateAll();
 #endif
                 }
-
-                Status = AutoBuildTaskStatus.Completed;
                 return true;
             }
             catch (System.Exception ex)
             {
-                autoBuildConfig.Logger.LogError($"HybridCLR 任务错误: {ex.Message}");
-                Status = AutoBuildTaskStatus.Failed;
+                context.Logger.LogError($"HybridCLR 任务错误: {ex.Message}");
                 return false;
             }
         }

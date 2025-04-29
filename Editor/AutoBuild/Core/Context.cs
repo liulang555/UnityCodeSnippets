@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AutoBuildSystem
 {
-    public class AutoBuildConfig
+    public class Context
     {
         #region 共享参数
         /// <summary>
@@ -69,8 +69,6 @@ namespace AutoBuildSystem
             return SharedParameters.ContainsKey(key);
         }
         #endregion
-
-       
 
         #region 日志记录器
         /// <summary>

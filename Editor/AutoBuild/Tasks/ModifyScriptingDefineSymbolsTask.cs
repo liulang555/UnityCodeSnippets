@@ -14,28 +14,23 @@ namespace AutoBuildSystem
             TaskName = "修改宏定义 Scripting Define Symbols";
             Priority = (int)BuildTaskPriority.ModifyScriptingDefineSymbolsTask;
             TaskType = BuildTaskType.PreBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
 
-        public override bool Execute(AutoBuildConfig config, IAutoBuildPlatform platform, IChannel channel)
+        public override bool ExecuteInternal(Context config, IAutoBuildPlatform platform, IChannel channel)
         {
             try
             {
-                Status = AutoBuildTaskStatus.Running;
-
                 // 计算最终的宏定义列表
                 string newDefines = CalculateScriptingDefines(platform, channel);
                 // 设置宏定义
                 PlayerSettings.SetScriptingDefineSymbols(platform.GetNamedBuildTarget(), newDefines);
                 LogString(config,newDefines);
 
-                Status = AutoBuildTaskStatus.Completed;
                 return true;
             }
             catch (System.Exception ex)
             {
                 config.Logger.LogError($"宏定义修改任务错误: {ex.Message}");
-                Status = AutoBuildTaskStatus.Failed;
                 return false;
             }
         }

@@ -28,7 +28,7 @@ namespace AutoBuildSystem
                 ExcludeDefines = new HashSet<string> { }
             };
         }
-        public override void InitializeChannelParameters(AutoBuildConfig autoBuildConfig)
+        public override void InitializeChannelParameters(Context context)
         {
 
         }

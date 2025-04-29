@@ -8,7 +8,7 @@ namespace AutoBuildSystem
         {
             ChannelId = ChannelCodeType.GooglePlay;
             ChannelName = "Google Play";
-            PackgeName = "com.InnovationDream.TimeRebuild";
+            PackgeName = "com.innovationdreamtech.tsr";
             ProductName = "時空重構";
         }
         
@@ -29,7 +29,7 @@ namespace AutoBuildSystem
             };
         }
 
-        public override void InitializeChannelParameters(AutoBuildConfig autoBuildConfig)
+        public override void InitializeChannelParameters(Context context)
         {
             
         }

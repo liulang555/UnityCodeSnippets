@@ -7,13 +7,13 @@ using System.IO;
 
 namespace AutoBuildSystem
 {
-    public class IosPlatform : BasePlatform
+    public class MacOS_Platform : BasePlatform
     {
-        public IosPlatform()
+        public MacOS_Platform()
         {
-            PlatformName = "IOS";
-            AutoBuildPlatform = AutoBuildPlatform.IOS;
-            BuildTarget = BuildTarget.iOS;
+            PlatformName = "MacOS";
+            AutoBuildPlatform = AutoBuildPlatform.MacOs;
+            BuildTarget = BuildTarget.StandaloneOSX;
         }
 
         public override List<IBuildTask> GetPlatformTasks()
@@ -27,18 +27,19 @@ namespace AutoBuildSystem
                 new ModifyBuildConfigTask(),
                 new BuildPlayerTask(),
                 new OpenBuildDirectoryTask(),
-                new VersionAddTask(),
             };
         }
 
         public override HashSet<string> GetScriptingDefines()
         {
-            return new HashSet<string> { "DISABLESTEAMWORKS", "DOTWEEN", "UseHybridCLR" };
+            return new HashSet<string> {  "DOTWEEN", "UseHybridCLR" };
         }
 
         public override void UnitySettings(Context context)
         {
-            //EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
+#if UNITY_EDITOR_OSX
+             UnityEditor.OSXStandalone.UserBuildSettings.createXcodeProject = true;
+#endif
         }
         public override void InitializePlatformParameters(Context context, IChannel channel)
         {
@@ -50,3 +51,4 @@ namespace AutoBuildSystem
         }
     }
 }
+

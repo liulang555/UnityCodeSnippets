@@ -1,3 +1,4 @@
+using log4net.Repository.Hierarchy;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -14,24 +15,20 @@ namespace AutoBuildSystem
             TaskName = "YooAsset 打包Bundle资源";
             Priority = (int)BuildTaskPriority.YooAssetTask;
             TaskType = BuildTaskType.PreBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
 
-        public override bool Execute(AutoBuildConfig config, IAutoBuildPlatform platform, IChannel channel)
+        public override bool ExecuteInternal(Context context, IAutoBuildPlatform platform, IChannel channel)
         {
             try
             {
-                Status = AutoBuildTaskStatus.Running;
-
-                base.LogParameter(config, BuildParameterKeys.NeedBuildBundle);
-                bool needBuildBundle = config.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
+                base.LogParameter(context, BuildParameterKeys.NeedBuildBundle);
+                bool needBuildBundle = context.GetParameter<bool>(BuildParameterKeys.NeedBuildBundle);
                 if (!needBuildBundle)
                 {
-                    Status = AutoBuildTaskStatus.Completed;
                     return true;
                 }
 
-                config.Logger.Log($"AutoBuild YooAssetTask 开始构建资源: {DateTime.Now}");
+                LogString(context,$"开始构建资源: {DateTime.Now}");
 
                 var buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
                 var streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
@@ -61,21 +58,18 @@ namespace AutoBuildSystem
 
                 if (buildResult.Success)
                 {
-                    config.Logger.Log($"AutoBuild YooAssetTask 构建资源成功: {DateTime.Now}");
-                    Status = AutoBuildTaskStatus.Completed;
+                    LogString(context, $"构建资源成功: {DateTime.Now}");
                     return true;
                 }
                 else
                 {
-                    config.Logger.LogError($"AutoBuild YooAssetTask 构建资源失败: {DateTime.Now}");
-                    Status = AutoBuildTaskStatus.Failed;
+                    context.Logger.LogError($"构建资源失败: {DateTime.Now}");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                config.Logger.LogError($"AutoBuild YooAssetTask 错误: {ex.Message}");
-                Status = AutoBuildTaskStatus.Failed;
+                context.Logger.LogError($"AutoBuild YooAssetTask 错误: {ex.Message}");
                 return false;
             }
         }

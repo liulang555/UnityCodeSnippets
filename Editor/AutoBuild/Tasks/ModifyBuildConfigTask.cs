@@ -15,14 +15,12 @@ namespace AutoBuildSystem
             TaskName = "修改打包配置";
             Priority = (int)BuildTaskPriority.ModifyBuildConfigTask;
             TaskType = BuildTaskType.PreBuild;
-            Status = AutoBuildTaskStatus.Pending;
         }
-        public override bool Execute(AutoBuildConfig config, IAutoBuildPlatform platform, IChannel channel)
+        
+        public override bool ExecuteInternal(Context config, IAutoBuildPlatform platform, IChannel channel)
         {
             try
             {
-                Status = AutoBuildTaskStatus.Running;
-                
                 string fullPath = Application.dataPath + "/" + resourcePath;
                 if (File.Exists(fullPath))
                 {
@@ -50,7 +48,7 @@ namespace AutoBuildSystem
                     }
                     if (bundleServerType == 1)
                     {
-                        buildConfig.BundleServerUrl = "https://s3.ap-southeast-1.amazonaws.com/static.innovationdreamtech.com";
+                        buildConfig.BundleServerUrl = "https://tsrgame.innovationdreamtech.com";
                     }
 
                     string modifiedText = JsonUtility.ToJson(buildConfig, true);
@@ -58,20 +56,17 @@ namespace AutoBuildSystem
                     File.WriteAllText(fullPath, modifiedText);
                     AssetDatabase.Refresh();
 
-                    Status = AutoBuildTaskStatus.Completed;
                     return true;
                 }
                 else
                 {
                     config.Logger.LogError($"配置更新错误 File not found: {fullPath}");
-                    Status = AutoBuildTaskStatus.Failed;
                     return false;
                 }
             }
             catch (Exception e)
             {
                 config.Logger.LogError($"配置更新错误: {e.Message}");
-                Status = AutoBuildTaskStatus.Failed;
                 return false;
             }
         }

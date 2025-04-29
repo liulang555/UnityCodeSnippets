@@ -28,9 +28,9 @@ namespace AutoBuildSystem
             };
         }
 
-        public override void InitializeChannelParameters(AutoBuildConfig autoBuildConfig)
+        public override void InitializeChannelParameters(Context context)
         {
-            autoBuildConfig.SetParameter(BuildParameterKeys.SteamAppID, 3292340);
+            context.SetParameter(BuildParameterKeys.SteamAppID, 3292340);
         }
     }
 } 
